@@ -11,12 +11,18 @@ class OpenAIRepository {
   OpenAIRepository(this.prompt, {required OpenAIService openAIService})
       : _openAIService = openAIService;
 
-   fetchPrompts() async
+    fetchPrompts() async
   {
+    messageController.updateObjMessageController(
+        {
+          "isUser":false,
+          "message":"loading"
+        });
     var response = await _openAIService.openAiService(prompt);
     var jsonData = json.decode(response.body);
     if(response.statusCode==200)
     {
+      messageController.objMessageController.removeLast();
       messageController.updateObjMessageController(
           {
             "isUser":false,
@@ -24,10 +30,15 @@ class OpenAIRepository {
           }
           );
       messageController.objMessageController.refresh();
-      print(messageController.objMessageController);
+
     }else
     {
-      return [response.statusCode];
+      messageController.objMessageController.removeLast();
+      messageController.updateObjMessageController(
+          {
+            "isUser":false,
+            "message":"error"
+          });
     }
   }
 

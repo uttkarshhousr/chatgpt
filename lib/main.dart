@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import 'Controller/MessageController.dart';
-import 'data/services/openai_service.dart';
 void main() async{
   try {
     await dotenv.load(fileName: '.env.Production');
@@ -42,7 +40,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-MessageController messageController =Get.put(MessageController()) ;
+MessageController messageController = Get.put(MessageController()) ;
 final prompt = PromptModel(messageController: messageController);
 
 class _MyHomePageState extends State<MyHomePage> {

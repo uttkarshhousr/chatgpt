@@ -1,5 +1,6 @@
 import 'package:chatgpt_app/data/repositories/openai_repository.dart';
 import 'package:chatgpt_app/data/services/openai_service.dart';
+import 'package:chatgpt_app/utils/app_icons.dart';
 import 'package:flutter/material.dart';
 
 
@@ -17,52 +18,80 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-height: 100,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        border: Border(
-          top: BorderSide(
-            color: Colors.black,
-            width: 0.5,
-          ),
-        ),
-      ),
-      child:TextFormField(
-        onFieldSubmitted: (e) {
-          OpenAIRepository(e, openAIService: OpenAIService()).fetchPrompts();
-          messageController.updateObjMessageController(
-              {
-                "isUser":true,
-                "message":e
-              }
-          );
-          messageController.objMessageController.refresh();
-          controller.clear();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
+      child: Container(
 
-        },
-        controller: controller,
-        style: const TextStyle(
-          color: Colors.white,
-        ),
-        decoration: const InputDecoration(
-          focusColor: Colors.white,
-          filled: true,
-          fillColor: Colors.black,
-          suffixIcon: Icon(
-            Icons.send,
-            color: Color(0xffacacbe),
+        decoration:  BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(50.0),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.all(
-              Radius.circular(5.0),
+          border: Border.all(color: Colors.white,width: 0.5),
+          color: Colors.black,
+
+        ),
+        child:TextFormField(
+          onFieldSubmitted: (e) async{
+            if(e.isNotEmpty) {
+              messageController.updateObjMessageController(
+                  {
+                    "isUser": true,
+                    "message": e
+                  }
+              );
+              OpenAIRepository(e, openAIService: OpenAIService()).fetchPrompts();
+
+              messageController.objMessageController.refresh();
+              controller.clear();
+            }
+
+          },
+          controller: controller,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+          decoration:  InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            focusColor: Colors.white,
+            filled: true,
+            fillColor: AppColor.keyboardColor,
+            suffixIcon: InkWell(
+
+              onTap: (){
+                if(controller.text.isNotEmpty) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  messageController.updateObjMessageController(
+                      {
+                        "isUser": true,
+                        "message": controller.text
+                      }
+                  );
+                  OpenAIRepository(
+                      controller.text, openAIService: OpenAIService())
+                      .fetchPrompts();
+
+                  messageController.objMessageController.refresh();
+                  controller.clear();
+                }
+              },
+              child: const Icon(
+                Icons.send,
+                color:AppColor.keyboardIconColor,
+              ),
             ),
-          ),
-          border: OutlineInputBorder(
+            focusedBorder: const OutlineInputBorder(
 
-            borderRadius: BorderRadius.all(
-              Radius.circular(5.0),
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.all(
+
+                Radius.circular(50.0),
+              ),
+            ),
+            border: const OutlineInputBorder(
+
+              borderRadius: BorderRadius.all(
+                Radius.circular(50.0),
+              ),
             ),
           ),
         ),

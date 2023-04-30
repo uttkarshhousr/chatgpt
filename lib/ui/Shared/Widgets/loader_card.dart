@@ -13,7 +13,7 @@ class Loading extends StatelessWidget {
     return Container(
       color: const Color(0xff444654),
       padding: const EdgeInsets.all(8),
-      child: AnimatedTextKit(
+      child:  AnimatedTextKit(
         animatedTexts: [
           TypewriterAnimatedText(
             text,
